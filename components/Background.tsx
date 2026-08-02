@@ -1,21 +1,21 @@
 import { activities, certifications, education } from "@/content/profile";
 import { GUTTER_GRID, RowSection } from "./Section";
-import { GutterYears, RailTick } from "./Bits";
+import { GutterYears } from "./Bits";
 import Reveal from "./Reveal";
 
+/** One of the two `surface` shelves that frame the main content. */
 export default function Background() {
   return (
-    <RowSection id="background" label="Background">
+    <RowSection id="background" label="Background" tone="surface">
       <ol className="space-y-12">
         {education.map((study) => (
-          <li key={study.institution} className={`relative ${GUTTER_GRID}`}>
+          <li key={study.institution} className={GUTTER_GRID}>
             {study.endYear === null ? (
               <GutterYears top="Now" bottom={`to ${study.end}`} accent />
             ) : (
               <GutterYears top={study.end} />
             )}
             <div className="min-w-0">
-              <RailTick />
               <Reveal>
                 <h3 className="font-display text-xl leading-tight font-medium">
                   {study.institution}

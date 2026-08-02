@@ -94,7 +94,7 @@ export const contact = {
    */
   github: null as string | null,
   githubLabel: null as string | null,
-  resume: "/Joshini_Meenakshisundaram_Naagraj_Resume.pdf",
+  resume: "/Joshini_M_Naagraj_Resume.pdf",
 } as const;
 
 /** The hero thesis. First person, not resume voice. */
@@ -436,9 +436,9 @@ export const activities = [
 ];
 
 export const sections = [
+  { id: "career", label: "Career" },
   { id: "focus", label: "Focus" },
   { id: "work", label: "Work" },
-  { id: "career", label: "Career" },
   { id: "background", label: "Background" },
   { id: "contact", label: "Contact" },
 ] as const;

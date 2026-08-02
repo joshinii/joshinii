@@ -1,6 +1,6 @@
 import type { WorkItem as Item } from "@/content/profile";
 import { GUTTER_GRID } from "./Section";
-import { MetricNote, RailTick, TechTags } from "./Bits";
+import { MetricNote, TechTags } from "./Bits";
 import { Cs30System, KafkaRebuild } from "./Diagram";
 
 /**
@@ -22,8 +22,9 @@ export default function WorkItem({ item }: { item: Item }) {
       // Clears the sticky header when a focus card links straight here.
       className={`relative scroll-mt-32 lg:scroll-mt-28 ${GUTTER_GRID}`}
     >
-      <div className="mb-4 flex items-baseline gap-3 lg:mb-0 lg:flex-col lg:items-end lg:gap-1 lg:pt-px lg:text-right">
-        <p className={`label ${ongoing ? "text-accent" : "text-ink-faint"}`}>
+      <div className="mb-4 flex items-baseline gap-3 lg:mb-0 lg:flex-col lg:items-end lg:gap-1.5 lg:pt-px lg:text-right">
+        {/* Always faint: "Now" below is the only accent the gutter gets. */}
+        <p className="label text-ink-faint">
           {item.kind === "role" ? "Role" : "Project"}
         </p>
         <p className="font-mono text-[0.75rem] leading-[1.6] text-ink-faint">
@@ -46,7 +47,6 @@ export default function WorkItem({ item }: { item: Item }) {
       </div>
 
       <div className="min-w-0">
-        <RailTick />
 
         <h3 className="font-display text-2xl leading-tight font-medium text-balance">
           {item.title}

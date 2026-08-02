@@ -15,12 +15,15 @@ export default function Focus() {
           {intro}
         </p>
 
-        {/* Flex columns so the proof links line up across all three cards. */}
-        <ul className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-3">
+        {/*
+          Boxed cards — distinct from Career's rule-topped strip and Work's open
+          cards. Flex columns so the proof links line up across all three.
+        */}
+        <ul className="mt-11 grid gap-5 sm:grid-cols-3">
           {focusAreas.map((area) => (
             <li
               key={area.title}
-              className="flex flex-col border-t border-rule pt-5"
+              className="flex flex-col border border-rule p-5"
             >
               <h3 className="font-display text-[1.15rem] leading-tight font-medium">
                 {area.title}

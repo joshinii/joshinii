@@ -28,17 +28,22 @@ export default function Work() {
     : work;
 
   const chip = (active: boolean) =>
-    `cursor-pointer border px-2.5 py-[0.35rem] font-mono text-[0.75rem] leading-none transition-colors ${
+    `cursor-pointer border px-2 py-[0.3rem] font-mono text-[0.72rem] leading-none transition-colors ${
       active
-        ? "border-accent text-accent"
-        : "border-rule text-ink-muted hover:border-rule-strong hover:text-ink"
+        ? "border-accent bg-accent-soft text-accent"
+        : "border-rule bg-paper text-ink-muted hover:border-rule-strong hover:text-ink"
     }`;
 
   return (
     <RowSection id="work" label="Work">
-      <div className="border-t border-rule pt-5">
-        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
-          <span className="label mr-1 text-ink-faint">Filter</span>
+      {/*
+        Boxed and tinted so it reads as a control surface rather than as loose
+        content. Previously it sat bare and full-width, which made it look like
+        stray text — and collided with the old gutter rail.
+      */}
+      <div className="border border-rule bg-surface px-4 py-4 sm:px-5">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
+          <span className="label mr-1 shrink-0 text-ink-faint">Filter by</span>
           <button
             type="button"
             aria-pressed={topic === null}
@@ -61,7 +66,10 @@ export default function Work() {
           ))}
         </div>
 
-        <p role="status" className="label mt-4 text-ink-muted">
+        <p
+          role="status"
+          className="label mt-3.5 border-t border-rule pt-3 text-ink-muted"
+        >
           {topic
             ? `${shown.length} of ${work.length} — ${topic}`
             : `${work.length} items, strongest first`}

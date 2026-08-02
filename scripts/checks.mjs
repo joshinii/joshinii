@@ -194,7 +194,7 @@ const links = await evalJs(`(() => {
 })()`);
 check("no dead links", links.dead.length === 0, links.dead.length ? JSON.stringify(links.dead) : `${links.hrefs.length} links`);
 
-const res = await evalJs(`fetch('/Joshini_Meenakshisundaram_Naagraj_Resume.pdf', {method:'HEAD'}).then(r => r.status + ' ' + r.headers.get('content-type'))`);
+const res = await evalJs(`fetch('/Joshini_M_Naagraj_Resume.pdf', {method:'HEAD'}).then(r => r.status + ' ' + r.headers.get('content-type'))`);
 check("resume PDF resolves", String(res).startsWith("200"), String(res));
 
 const og = await evalJs(`fetch('/opengraph-image', {method:'GET'}).then(r => r.status + ' ' + r.headers.get('content-type'))`);

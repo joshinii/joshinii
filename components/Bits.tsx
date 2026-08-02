@@ -1,26 +1,4 @@
-/**
- * Small shared pieces. The rail tick and tie are what physically connect an
- * entry to the spine; everything else here is typographic.
- */
-
-/**
- * A rung on the ladder: a square on the rail plus a hairline running from it
- * toward the content.
- *
- * Both spans resolve against the nearest positioned ancestor, which is the
- * `relative` grid row — NOT the content column they're nested in. So the
- * offset is measured from the row's left edge, and `7.5rem` is the gutter
- * width, i.e. exactly where Spine puts the rail. Keep the two in step.
- */
-export function RailTick() {
-  return (
-    <span aria-hidden="true" className="hidden lg:block">
-      <span className="absolute top-[0.45rem] left-[7.5rem] h-[5px] w-[5px] -translate-x-1/2 bg-rule-strong" />
-      {/* Spans the gutter gap so the rung actually reaches the entry. */}
-      <span className="tie absolute top-[0.45rem] left-[7.5rem] h-px w-10" />
-    </span>
-  );
-}
+/** Small shared pieces. All typographic — the rail they used to hang off is gone. */
 
 export function TechTags({ items }: { items: string[] }) {
   return (
@@ -38,7 +16,7 @@ export function TechTags({ items }: { items: string[] }) {
 }
 
 /**
- * Dates, right-aligned against the rail in the gutter. Callers pass the exact
+ * Dates, right-aligned in the gutter. Callers pass the exact
  * strings rather than a date range, because not every entry has both ends on
  * record — an invented start date would be worse than a missing one.
  */

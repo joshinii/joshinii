@@ -120,28 +120,6 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Signature: the chronological spine.
-   A hairline rail whose ticks are real years from the profile. The travelling
-   marker tracks the reader's position through her career — it encodes the
-   content rather than decorating it.
---------------------------------------------------------------------------- */
-
-.spine-rail {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    var(--rule) 6%,
-    var(--rule) 94%,
-    transparent 100%
-  );
-}
-
-/* Short horizontal hairline tying an entry back to the rail. */
-.tie {
-  background: linear-gradient(to right, var(--rule-strong), transparent);
-}
-
-/* ---------------------------------------------------------------------------
    Work item disclosures. The caret turns when the <details> opens.
 --------------------------------------------------------------------------- */
 

@@ -53,7 +53,7 @@ export default async function OpenGraphImage() {
             Joshini
           </div>
           <div style={{ fontSize: 88, lineHeight: 1.0, letterSpacing: "-0.02em" }}>
-            Meenakshisundaram Naagraj
+            M Naagraj
           </div>
           <div
             style={{

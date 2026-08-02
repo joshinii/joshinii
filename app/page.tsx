@@ -1,31 +1,33 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import Career from "@/components/Career";
 import Focus from "@/components/Focus";
 import Work from "@/components/Work";
-import Career from "@/components/Career";
 import Background from "@/components/Background";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import Spine from "@/components/Spine";
 
+/**
+ * Reading order: context, then capability, then proof.
+ *
+ * Career sits directly under the hero as the overview — a reader gets the whole
+ * trajectory in one glance before meeting any detail. Focus then says what she
+ * does, and Work supplies the evidence.
+ *
+ * Sections are full-bleed so each can carry its own background tone, and each
+ * applies the max-width container itself (see components/Section.tsx).
+ */
 export default function Home() {
   return (
     <>
       <Nav />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-6 sm:px-8">
+      <main className="flex-1">
         <Hero />
-        {/*
-          The rail is absolute inside this wrapper, so it spans the body of the
-          page — hero above it, footer below.
-        */}
-        <div className="relative">
-          <Spine />
-          <Focus />
-          <Work />
-          <Career />
-          <Background />
-          <Contact />
-        </div>
+        <Career />
+        <Focus />
+        <Work />
+        <Background />
+        <Contact />
       </main>
       <Footer />
     </>

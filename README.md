@@ -1,6 +1,6 @@
 # joshini-portfolio
 
-Single-page portfolio for Joshini Meenakshisundaram Naagraj. Next.js 16 (App
+Single-page portfolio for Joshini M Naagraj. Next.js 16 (App
 Router) + Tailwind 4, deployed on Vercel.
 
 ```bash
@@ -119,7 +119,7 @@ recompiles it into `public/`.
 To verify the phone stays out:
 
 ```bash
-pdftotext public/Joshini_Meenakshisundaram_Naagraj_Resume.pdf - | grep -c 209   # want 0
+pdftotext public/Joshini_M_Naagraj_Resume.pdf - | grep -c 209   # want 0
 ```
 
 Note that this PDF predates the CS30 Secure Coding Lab project and does not list

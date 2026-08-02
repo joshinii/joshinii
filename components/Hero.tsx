@@ -1,4 +1,5 @@
 import { contact, heroFacts, positioning } from "@/content/profile";
+import { CONTAINER } from "./Section";
 
 /**
  * The hero opens on the most characteristic thing in her work: a queue that
@@ -7,7 +8,7 @@ import { contact, heroFacts, positioning } from "@/content/profile";
  */
 export default function Hero() {
   return (
-    <section id="top" className="pt-12 pb-14 sm:pt-16 sm:pb-16">
+    <section id="top" className={`${CONTAINER} pt-12 pb-14 sm:pt-16 sm:pb-16`}>
       <p className="label text-ink-faint">
         {contact.role}
         <span className="mx-2 text-rule-strong">/</span>
@@ -17,7 +18,7 @@ export default function Hero() {
       <h1 className="mt-6 font-display text-[clamp(2rem,7.6vw,4.6rem)] leading-[0.93] font-normal tracking-[-0.022em] text-balance">
         Joshini
         <br />
-        Meenakshisundaram
+        M.
         <br />
         Naagraj
       </h1>

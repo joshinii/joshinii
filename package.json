@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "resume:build": "typst compile resume/resume.typ \"public/Joshini_Meenakshisundaram_Naagraj_Resume.pdf\"",
+    "resume:build": "typst compile resume/resume.typ \"public/Joshini_M_Naagraj_Resume.pdf\"",
     "check": "node scripts/checks.mjs"
   },
   "dependencies": {
