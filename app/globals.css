@@ -1,26 +1,189 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Tokens. Warm neutrals only — no pure white, no pure black. One accent.
+
+   ink, ink-muted and ink-faint all clear WCAG AA (4.5:1) against their own
+   paper, because all three carry real text — ink-faint is the 11px mono label
+   voice, not a decorative tint. rule / rule-strong are hairlines and never
+   used for text.
+--------------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #faf7f2;
+  --surface: #f3eee6;
+  --ink: #1a1714;
+  --ink-muted: #5c544b;
+  --ink-faint: #776f67;
+  --rule: #ded5c8;
+  --rule-strong: #c9bcaa;
+  --accent: #b4501e;
+  --accent-soft: #f0e2d6;
+}
+
+/*
+  Theme resolution. The manual toggle must beat the OS preference in BOTH
+  directions, so the media query is scoped away from an explicit light choice
+  and the explicit dark choice is restated afterwards at higher specificity.
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15120e;
+    --surface: #1e1a15;
+    --ink: #f2ede5;
+    --ink-muted: #a29a8f;
+    --ink-faint: #8f857a;
+    --rule: #332c24;
+    --rule-strong: #4a4034;
+    --accent: #e0763c;
+    --accent-soft: #2c1d13;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #15120e;
+  --surface: #1e1a15;
+  --ink: #f2ede5;
+  --ink-muted: #a29a8f;
+  --ink-faint: #8f857a;
+  --rule: #332c24;
+  --rule-strong: #4a4034;
+  --accent: #e0763c;
+  --accent-soft: #2c1d13;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+  /*
+    Keep anchor targets clear of the sticky header. Below lg the header carries
+    a second row — the mobile section nav — so it needs more room; above lg
+    that row is gone.
+  */
+  scroll-padding-top: 8.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (width >= 64rem) {
+  html {
+    scroll-padding-top: 5.5rem;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* Mono is the utility voice: small, tracked out, upper. */
+.label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------------
+   Signature: the chronological spine.
+   A hairline rail whose ticks are real years from the profile. The travelling
+   marker tracks the reader's position through her career — it encodes the
+   content rather than decorating it.
+--------------------------------------------------------------------------- */
+
+.spine-rail {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--rule) 6%,
+    var(--rule) 94%,
+    transparent 100%
+  );
+}
+
+/* Short horizontal hairline tying an entry back to the rail. */
+.tie {
+  background: linear-gradient(to right, var(--rule-strong), transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Work item disclosures. The caret turns when the <details> opens.
+--------------------------------------------------------------------------- */
+
+.disclosure-caret {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+details[open] .disclosure-caret {
+  transform: rotate(90deg);
+}
+
+/* ---------------------------------------------------------------------------
+   Motion. Reveal styles only exist inside the no-preference query, so under
+   reduced motion the content is simply visible with no JS involvement.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

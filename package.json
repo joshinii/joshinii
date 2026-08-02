@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "resume:build": "typst compile resume/resume.typ \"public/Joshini_Meenakshisundaram_Naagraj_Resume.pdf\"",
+    "check": "node scripts/checks.mjs"
   },
   "dependencies": {
     "next": "16.2.12",
