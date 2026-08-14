@@ -15,12 +15,8 @@ export default function Hero() {
         {contact.location}
       </p>
 
-      <h1 className="mt-6 font-display text-[clamp(2rem,7.6vw,4.6rem)] leading-[0.93] font-normal tracking-[-0.022em] text-balance">
-        Joshini
-        <br />
-        M.
-        <br />
-        Naagraj
+      <h1 className="mt-6 font-display text-[clamp(2rem,7.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-0.01em] text-balance">
+        Joshini M. Naagraj
       </h1>
 
       <p className="mt-7 max-w-[34ch] font-display text-2xl leading-[1.35] text-ink-muted italic sm:text-[1.75rem]">

@@ -55,7 +55,11 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={
-        theme ? `Switch to ${theme === "dark" ? "light" : "dark"} theme` : "Switch theme"
+        theme
+          ? `${theme === "dark" ? "Dark" : "Light"} — Switch to ${
+              theme === "dark" ? "light" : "dark"
+            } theme`
+          : "Switch theme"
       }
       className="label cursor-pointer text-ink-faint transition-colors hover:text-accent"
     >

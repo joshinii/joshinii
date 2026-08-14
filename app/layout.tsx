@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, IBM_Plex_Mono, Inter } from "next/font/google";
 import { contact, positioning } from "@/content/profile";
 import "./globals.css";
 
@@ -15,6 +15,13 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   display: "swap",
   weight: ["400", "500", "600"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  weight: ["300", "400", "500", "600"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://joshini.vercel.app";
@@ -120,10 +127,16 @@ export default function RootLayout({
         </noscript>
       </head>
       <body
-        className={`${newsreader.variable} ${plexMono.variable} flex min-h-full flex-col`}
+        className={`${inter.variable} ${newsreader.variable} ${plexMono.variable} flex min-h-full flex-col`}
       >
+        {/*
+          Must point at an id that exists. It used to be `#about`, a section
+          removed long ago — an unresolvable fragment leaves focus on the skip
+          link itself, so the next Tab went right back into the header and the
+          link skipped nothing. `#top` is the hero, the first real content.
+        */}
         <a
-          href="#about"
+          href="#top"
           className="label sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
         >
           Skip to content

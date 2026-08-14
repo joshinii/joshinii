@@ -19,8 +19,13 @@ export default function WorkItem({ item }: { item: Item }) {
   return (
     <li
       id={`work-${item.id}`}
-      // Clears the sticky header when a focus card links straight here.
-      className={`relative scroll-mt-32 lg:scroll-mt-28 ${GUTTER_GRID}`}
+      /*
+        Deliberately no `scroll-mt-*` here. `scroll-padding-top` on <html>
+        already clears the sticky header for every anchor; scroll-margin stacks
+        on top of it rather than replacing it, which landed focus-card links
+        ~150px below the header instead of ~35px. A check now asserts the gap.
+      */
+      className={`relative ${GUTTER_GRID}`}
     >
       <div className="mb-4 flex items-baseline gap-3 lg:mb-0 lg:flex-col lg:items-end lg:gap-1.5 lg:pt-px lg:text-right">
         {/* Always faint: "Now" below is the only accent the gutter gets. */}

@@ -6,7 +6,7 @@ Router) + Tailwind 4, deployed on Vercel.
 ```bash
 npm run dev            # http://localhost:3000
 npm run build          # production build
-npm run check          # 34 browser checks against a running dev server
+npm run check          # 38 browser checks against a running dev server
 npm run resume:build   # recompile the downloadable PDF (needs typst)
 ```
 
@@ -16,6 +16,18 @@ theme toggle beating the OS preference in both directions and surviving a
 reload, reduced motion, WCAG AA contrast in both themes, dead links, heading
 order, diagram accessibility, anchors clearing the sticky header, and the work
 filter and disclosures behaving. Start `npm run dev` first.
+
+Four of those checks exist because prose in this file failed to prevent the bug,
+so treat them as load-bearing:
+
+- **Every in-page fragment resolves to an element.** A non-empty `href` is not
+  enough — `#about` outlived the section it pointed at, and the skip link
+  silently skipped nothing while the dead-link check passed it.
+- **`#work-kafka` lands just below the sticky header, at both widths.** This is
+  the `scroll-mt` / `scroll-padding` stacking trap described under Design notes.
+- **A Focus proof link still works under an excluding filter.** Filtered-out
+  items leave the DOM, so the chips could turn the Focus section's deep links
+  into no-ops.
 
 One harness quirk worth knowing: a throttled headless page produces no frames,
 so its animation clock never ticks — CSS transitions stay pinned at their start
@@ -62,22 +74,36 @@ Two typefaces, each with one job: **Newsreader** for display and body prose,
 tags, nav). Palette is warm neutrals with a single burnt-sienna accent — no pure
 white, no pure black, no shadows, no border radius.
 
-The page reads Hero → Focus → Work → Career → Background → Contact. **Focus**
-answers what kind of engineer she is before the reader meets a date, and each
-card's proof anchors into the work item backing it. **Work** is the unified list
-with the filter above it; the filter is what replaced a 46-chip skills wall.
+The page reads Hero → Career → Focus → Work → Background → Contact. **Career**
+sits directly under the hero as the overview, so a reader gets the whole
+trajectory in one glance before meeting any detail. **Focus** then answers what
+kind of engineer she is, and each card's proof anchors into the work item backing
+it. **Work** supplies the evidence — the unified list with the filter above it,
+which is what replaced a 46-chip skills wall.
+
+Because those Focus proof links point at individual work items, and an active
+filter removes non-matching items from the DOM, `components/Work.tsx` clears the
+filter when one is clicked. It listens for the click rather than `hashchange`,
+since re-clicking a link for the hash already in the URL fires no hashchange —
+exactly the case where a filter has since hidden the target.
 
 Every work card keeps one promise: *collapsed never hides substance*. Kind,
 dates, title, org, headline, result, diagram and full stack are always
 rendered — only the bullet list sits behind the native `<details>`. A check
 asserts this, because it's the assumption the whole layout rests on.
 
-The rail on the gutter/content boundary began as a "chronological spine", but
-Work is ordered by strength now, so its dates no longer ascend. It survives as
-an alignment device and a scroll-position marker only — **chronology lives in
-the Career strip**. Three files must agree on the gutter width
-(`7.5rem`) for it to line up — `components/Section.tsx` (`GUTTER_GRID`),
-`components/Spine.tsx`, and `RailTick` in `components/Bits.tsx`.
+There used to be a continuous hairline rail on the gutter/content boundary,
+begun as a "chronological spine". **It is gone** — it sat at a fixed offset
+across every section while the filter bar and career strip render full-width, so
+it cut straight through them, and once Work became impact-ordered its dates no
+longer ascended, leaving nothing to justify the collisions. **Chronology lives in
+the Career strip.**
+
+Sections differentiate by **tone** instead, per `components/Section.tsx`:
+`paper` (the default, separated by a hairline) and `surface` (a full-bleed warm
+tint with no rule, used for the two overview shelves — Career and Background —
+that frame the main content). The gutter width (`7.5rem`) now lives in exactly
+one place, `GUTTER_GRID` in that same file.
 
 Themes resolve from `prefers-color-scheme`, and the toggle overrides the OS in
 both directions — see the specificity note at the top of `app/globals.css`. An
@@ -89,9 +115,12 @@ voice, not a decorative tint.
 
 Sticky-header clearance lives in exactly one place: `scroll-padding-top` on
 `<html>` in `app/globals.css`, which is larger below `lg` because the header
-carries a second row there (the mobile section nav). Do not add `scroll-mt-*`
-to sections — scroll-margin stacks on top of scroll-padding and double-offsets
-every anchor.
+carries a second row there (the mobile section nav). Do not add `scroll-mt-*` to
+**any** anchor target — not sections, and not the work-item `<li>`s the Focus
+cards link into. Scroll-margin stacks on top of scroll-padding rather than
+replacing it, so it double-offsets the anchor: a `scroll-mt-32` on the work items
+landed them ~150px below the header instead of ~35px. Two checks now assert the
+gap, for a section anchor and for a work-item deep link.
 
 ## Diagrams
 
@@ -135,5 +164,12 @@ them with variable builds will break the OG route.
 ## Deploying
 
 Vercel needs no configuration. Set `NEXT_PUBLIC_SITE_URL` to the production
-origin so canonical URLs, `sitemap.xml`, `robots.txt`, and OG tags point at the
-real domain instead of the fallback.
+origin so `metadataBase`, `sitemap.xml`, `robots.txt`, and the OG/Twitter tags
+point at the real domain instead of the fallback. Three files read it
+independently — `app/layout.tsx`, `app/robots.ts`, `app/sitemap.ts` — each with
+the same hardcoded fallback, so change all three together.
+
+Note there is currently **no** `rel="canonical"` tag; `metadata` sets no
+`alternates`. Worth adding (`alternates: { canonical: "/" }` in
+`app/layout.tsx`) once the site is reachable at both a `vercel.app` subdomain
+and a custom domain.

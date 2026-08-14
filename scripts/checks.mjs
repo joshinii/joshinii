@@ -194,6 +194,26 @@ const links = await evalJs(`(() => {
 })()`);
 check("no dead links", links.dead.length === 0, links.dead.length ? JSON.stringify(links.dead) : `${links.hrefs.length} links`);
 
+/**
+ * A non-empty href is not enough. An in-page link whose target id doesn't exist
+ * scrolls to the top and leaves focus exactly where it was — which is how the
+ * skip link pointed at a long-removed `#about` and silently skipped nothing,
+ * while the check above passed it.
+ */
+const fragments = await evalJs(`(() => {
+  const unresolved = [];
+  for (const a of document.querySelectorAll('a[href^="#"]')) {
+    const id = decodeURIComponent(a.getAttribute('href').slice(1));
+    if (!id) continue; // a bare "#" is already covered above
+    if (!document.getElementById(id)) {
+      unresolved.push(id + ' (' + a.textContent.trim().slice(0, 24) + ')');
+    }
+  }
+  return unresolved;
+})()`);
+check("every in-page fragment resolves to an element", fragments.length === 0,
+  fragments.length ? JSON.stringify(fragments) : "all # targets exist");
+
 const res = await evalJs(`fetch('/Joshini_M_Naagraj_Resume.pdf', {method:'HEAD'}).then(r => r.status + ' ' + r.headers.get('content-type'))`);
 check("resume PDF resolves", String(res).startsWith("200"), String(res));
 
@@ -348,6 +368,41 @@ for (const [w, label] of [[390, "mobile"], [1280, "desktop"]]) {
       : `header ${landed.headerH}px, section top ${landed.sectionTop}px (gap ${landed.sectionTop - landed.headerH}px)`);
 }
 
+/**
+ * Deep links into a single work item have to land like section anchors do. A
+ * `scroll-mt-*` on the <li> stacks on top of <html>'s `scroll-padding-top`
+ * rather than replacing it, which once pushed the card ~150px below the header
+ * instead of ~35px. The README already warned against it and it happened
+ * anyway, so it is asserted here instead.
+ */
+for (const [w, label] of [[390, "mobile"], [1280, "desktop"]]) {
+  await send("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-color-scheme", value: "light" }, REDUCE],
+  });
+  await send("Emulation.setDeviceMetricsOverride", { width: w, height: 800, deviceScaleFactor: 1, mobile: w < 500 });
+  await send("Page.navigate", { url: "http://localhost:3000" });
+  await wait(2600);
+  const jumped = await evalJs(`(() => {
+    const a = [...document.querySelectorAll('a[href="#work-kafka"]')]
+      .find(x => x.getBoundingClientRect().width > 0);
+    if (!a) return false;
+    a.click();
+    return true;
+  })()`);
+  const gap = await waitUntil(
+    `(() => {
+      const h = document.querySelector('header').getBoundingClientRect().bottom;
+      const li = document.getElementById('work-kafka');
+      return li ? Math.round(li.getBoundingClientRect().top - h) : null;
+    })()`,
+    (v) => typeof v === "number" && v >= 0 && v < 70,
+    6000,
+  );
+  check(`#work-kafka lands just below the sticky header (${label})`,
+    jumped && typeof gap === "number" && gap >= 0 && gap < 70,
+    jumped ? `gap ${gap}px below header` : "no visible focus proof link");
+}
+
 // ---- 11. The filter is the replacement for the skills wall — it must work ----
 await send("Emulation.setDeviceMetricsOverride", { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
 await send("Page.navigate", { url: "http://localhost:3000" });
@@ -387,6 +442,39 @@ const deadChips = await evalJs(`(() => {
 })()`);
 check("no filter chip returns zero results", deadChips.length === 0,
   deadChips.length ? JSON.stringify(deadChips) : "all chips have matches");
+
+/**
+ * Filtered-out items leave the DOM, so an active chip that excludes a Focus
+ * card's target used to turn that proof link into a silent no-op. Clicking one
+ * must clear the filter and land on the item it names.
+ */
+const deepLinkUnderFilter = await evalJs(`(async () => {
+  const chip = [...document.querySelectorAll('#work button')]
+    .find(b => b.textContent.startsWith('Terraform'));
+  chip.click();
+  await new Promise(r => setTimeout(r, 400));
+  const hiddenFirst = !document.getElementById('work-kafka');
+
+  const proof = document.querySelector('#focus a[href="#work-kafka"]');
+  if (!proof) return { __noProof: true };
+  proof.click();
+  await new Promise(r => setTimeout(r, 600));
+
+  const li = document.getElementById('work-kafka');
+  const h = document.querySelector('header').getBoundingClientRect().bottom;
+  return {
+    hiddenFirst,
+    restored: !!li,
+    gap: li ? Math.round(li.getBoundingClientRect().top - h) : null,
+    status: document.querySelector('[role=status]')?.textContent || '',
+  };
+})()`);
+check("a Focus proof link still works under an excluding filter",
+  deepLinkUnderFilter.hiddenFirst === true && deepLinkUnderFilter.restored === true &&
+    typeof deepLinkUnderFilter.gap === "number" && deepLinkUnderFilter.gap >= 0 &&
+    deepLinkUnderFilter.gap < 70,
+  `hidden under Terraform=${deepLinkUnderFilter.hiddenFirst}, restored=${deepLinkUnderFilter.restored}, ` +
+    `gap=${deepLinkUnderFilter.gap}px, status "${deepLinkUnderFilter.status}"`);
 
 // ---- 12. Collapsed cards must still carry the substance ----
 const substance = await evalJs(`(() => {

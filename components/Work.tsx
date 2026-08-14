@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { alsoWorkedWith, filterTopics, work } from "@/content/profile";
 import { RowSection } from "./Section";
 import WorkItem from "./WorkItem";
@@ -26,6 +27,38 @@ export default function Work() {
   const shown = topic
     ? work.filter((item) => item.topics.includes(topic))
     : work;
+
+  /**
+   * Filtered-out items leave the DOM, which silently turns the Focus section's
+   * proof links (`#work-kafka` and friends) into no-ops whenever the active chip
+   * excludes their target. A reader who clicks "20 min → 5 min" is asking for
+   * that one item, so the filter yields to them.
+   *
+   * Listening for the click rather than `hashchange`, because re-clicking a link
+   * for the hash already in the URL fires no hashchange at all — the exact case
+   * where a filter has since hidden the target. `flushSync` renders the item
+   * before we scroll to it; without it there is nothing to scroll to yet.
+   */
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.(
+        'a[href^="#work-"]',
+      );
+      if (!link) return;
+
+      const id = decodeURIComponent(
+        link.getAttribute("href")!.slice(1),
+      );
+      // Already on screen — leave it to the browser's own fragment navigation.
+      if (document.getElementById(id)) return;
+
+      flushSync(() => setTopic(null));
+      document.getElementById(id)?.scrollIntoView();
+    };
+
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
 
   const chip = (active: boolean) =>
     `cursor-pointer border px-2 py-[0.3rem] font-mono text-[0.72rem] leading-none transition-colors ${
