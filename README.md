@@ -1,4 +1,4 @@
-# Hi, I'm Joshini
+# Hello!
 
 **Full Stack Software Engineer | Backend | Frontend | Cloud**
 
