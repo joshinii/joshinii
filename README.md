@@ -1,7 +1,5 @@
 # Hello!
 
-**Full Stack Software Engineer | Backend | Frontend | Cloud**
-
 I’m a software engineer with experience building backend systems, APIs, and distributed applications using **Java, Spring Boot, microservices, Kafka, and SQL**.
 
 Currently pursuing an **M.S. in Software Engineering at San Jose State University**.
