@@ -15,12 +15,6 @@ Currently pursuing an **M.S. in Software Engineering at San Jose State Universit
 * Exploring **AI/ML systems and LLM applications**
 * Contributing to open source - Apache Maven
 
-### Featured Work
-
-* **CS30 Secure Coding Lab** — Built a cross-platform coding environment with Kotlin, Spring Boot, FastAPI, Docker, and Git.
-* **Serverless Sentiment Analysis** — Designed an AWS serverless ML platform using DistilBERT, Lambda, SQS, DynamoDB, and Terraform.
-* **LLM Input Monitoring** — Built a privacy-focused system for detecting sensitive information in LLM prompts locally.
-
 ### Currently
 
 Building reliable systems, learning more about **AI infrastructure and distributed systems**, and contributing to projects that solve real-world engineering problems.
