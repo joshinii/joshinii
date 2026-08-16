@@ -8,11 +8,11 @@ Currently pursuing an **M.S. in Software Engineering at San Jose State Universit
 
 ### What I Work On
 
-* Building **scalable backend services and microservices**
-* Designing **REST APIs and event-driven systems with Kafka**
-* Developing **cloud-native applications on AWS**
-* Automating infrastructure with **Terraform and CI/CD**
-* Exploring **AI/ML systems and LLM applications**
+* Building scalable backend services and microservices
+* Designing REST APIs and event-driven systems with Kafka
+* Developing cloud-native applications on AWS
+* Automating infrastructure with Terraform and CI/CD
+* Exploring AI/ML systems and LLM applications
 * Contributing to open source - Apache Maven
 
 ### Currently
